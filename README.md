@@ -37,7 +37,7 @@ liqianqian@liqianqian ginserver % tree
 │   ├── load.go 							// 配置数据处理加载
 │   └── requestModel.go				// model 功能模块
 └── test
-    └── test.go
+    └── test.go								// 测试
 2 directories, 7 files
 liqianqian@liqianqian ginserver % 
 
