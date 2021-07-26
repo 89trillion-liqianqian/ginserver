@@ -1,18 +1,14 @@
-package model
+package handler
 
-import "strconv"
-
-type ArmyByRarityModel struct {
-	Rarity      int `form:"rarity" `
-	UnlockArena int `form:"unlockArena"`
-	Cvc         int `form:"cvc"`
-}
+import (
+	"ginserver/internal/model"
+	"ginserver/internal/service"
+)
 
 // 输入稀有度，当前解锁阶段和cvc，获取该稀有度cvc合法且已解锁的所有士兵
-
-func GetArmyByRarityModel(rarity, unlockArena int, cvc string) (reData []ArmyConfig) {
+func GetArmyByRarityHandler(rarity, unlockArena int, cvc string) (reData []model.ArmyConfig, err error) {
 	//获取配置
-	config := GetConfig()
+	config := model.GetConfig()
 	for id := range *config {
 		cData := (*config)[id]
 		if rarity == cData.Rarity && cvc == cData.Cvc && unlockArena <= cData.UnlockArena {
@@ -23,28 +19,27 @@ func GetArmyByRarityModel(rarity, unlockArena int, cvc string) (reData []ArmyCon
 }
 
 // 输入士兵id获取稀有度
-
-func GetRarityModel(armyId string) (reData map[string]int) {
+func GetRarityHandler(armyId string) (reData map[string]int, err error) {
 	reData = make(map[string]int)
 	//获取配置
-	config := GetConfig()
+	armyIdInt := 0
+	config := model.GetConfig()
 	if _, ok := (*config)[armyId]; ok {
-		armyIdInt, _ := strconv.Atoi(armyId)
+		armyIdInt, err = service.ArmyIdAtoi(armyId)
 		reData["id"] = armyIdInt
 		reData["rarity"] = (*config)[armyId].Rarity
 	}
-
 	return
 }
 
 // 输入士兵id获取战力
-
-func GetCombatPointsModel(armyId string) (reData map[string]int) {
+func GetCombatPointsHandler(armyId string) (reData map[string]int, err error) {
 	reData = make(map[string]int)
 	//获取配置
-	config := GetConfig()
+	armyIdInt := 0
+	config := model.GetConfig()
 	if _, ok := (*config)[armyId]; ok {
-		armyIdInt, _ := strconv.Atoi(armyId)
+		armyIdInt, err = service.ArmyIdAtoi(armyId)
 		reData["id"] = armyIdInt
 		reData["combatPoints"] = (*config)[armyId].CombatPoints
 	}
@@ -53,10 +48,9 @@ func GetCombatPointsModel(armyId string) (reData map[string]int) {
 }
 
 //输入cvc获取所有合法的士兵
-
-func GetArmyByCvcModel(cvc string) (reData []ArmyConfig) {
+func GetArmyByCvcHandler(cvc string) (reData []model.ArmyConfig, err error) {
 	//获取配置
-	config := GetConfig()
+	config := model.GetConfig()
 	for id := range *config {
 		cData := (*config)[id]
 		if cvc == cData.Cvc {
@@ -67,18 +61,17 @@ func GetArmyByCvcModel(cvc string) (reData []ArmyConfig) {
 }
 
 //获取每个阶段解锁相应士兵的json数据
-
-func GetArmyGroupUnlockArenaModel() (reData map[int][]ArmyConfig) {
-	reData = make(map[int][]ArmyConfig, 0)
+func GetArmyGroupUnlockArenaHandler() (reData map[int][]model.ArmyConfig, err error) {
+	reData = make(map[int][]model.ArmyConfig, 0)
 	//获取配置
-	config := GetConfig()
+	config := model.GetConfig()
 	for id := range *config {
 		cData := (*config)[id]
 		unlock := cData.UnlockArena
 		if _, ok := reData[unlock]; ok {
 			reData[unlock] = append(reData[unlock], cData)
 		} else {
-			aData := make([]ArmyConfig, 0)
+			aData := make([]model.ArmyConfig, 0)
 			aData = append(aData, cData)
 			reData[unlock] = aData
 		}

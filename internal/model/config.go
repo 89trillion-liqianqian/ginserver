@@ -15,6 +15,7 @@ app配置文件解析
 */
 var cfg *goconfig.ConfigFile
 
+// 加载config 配置
 func GetAppIni(filepath string) (err error) {
 	// 解析app配置
 	config, err := goconfig.LoadConfigFile(filepath)
@@ -26,6 +27,7 @@ func GetAppIni(filepath string) (err error) {
 	return nil
 }
 
+// 获取端口号
 func GetAppPort() (HttpPort string, err error) {
 	// 获取app端口
 	if HttpPort, err = cfg.GetValue("server", "HttpPort"); err != nil {
@@ -44,8 +46,7 @@ var (
 	armyconfig   *map[string]ArmyConfig   // 士兵配置数据
 )
 
-//士兵配置
-
+//士兵原始配置
 type GlobalConfig struct {
 	Id           string `json:"id"`
 	Note         string `json:"note"`
@@ -55,7 +56,7 @@ type GlobalConfig struct {
 	Cvc          string `json:"Cvc"`
 }
 
-//
+//士兵处理后的配置
 type ArmyConfig struct {
 	Id           int    `json:"id"`
 	Note         string `json:"note"`
@@ -65,6 +66,7 @@ type ArmyConfig struct {
 	Cvc          string `json:"Cvc"`
 }
 
+// 文件处理
 func LoadConfigJson(fliepath string) error {
 	var config map[string]GlobalConfig
 	file, err := ioutil.ReadFile(fliepath)
@@ -83,6 +85,7 @@ func LoadConfigJson(fliepath string) error {
 	return nil
 }
 
+// 重新生成配置文件
 func writeConfig() {
 	// 重写json数据
 	//log.Println("-2-config",globalconfig["10101"])
@@ -111,7 +114,7 @@ func writeConfig() {
 	// 需要的数据
 	armyconfig = &wData
 	data, _ := json.Marshal(wData)
-	fp, err := os.OpenFile("config.json", os.O_RDWR|os.O_TRUNC|os.O_CREATE, 0755)
+	fp, err := os.OpenFile("../config/config.json", os.O_RDWR|os.O_TRUNC|os.O_CREATE, 0755)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -123,8 +126,6 @@ func writeConfig() {
 }
 
 // 获取士兵配置
-
 func GetConfig() *map[string]ArmyConfig {
-
 	return armyconfig
 }
