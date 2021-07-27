@@ -10,7 +10,7 @@ import (
 
 // 定义命令行参数对应的变量
 //var configPath = flag.StringP("config", "c", "config.army.model.json", "Input Your config army")
-var configPath = flag.String("config", "config.army.model.json", "Input Your config army")
+var configPath = flag.String("config", "../config/config.army.model.json", "Input Your config army")
 
 func wordSepNormalizeFunc(f *flag.FlagSet, name string) flag.NormalizedName {
 	from := []string{"-", "_"}

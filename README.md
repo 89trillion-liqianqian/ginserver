@@ -327,6 +327,10 @@ goconfig
 cd ./app/
 #编译
 go build
+#运行 ,config 默认目录为config/config.army.model.json
+go run main.go --config=../config/config.army.model.json
+或者
+go run main.go 
 ```
 
 ## 8.todo 
